@@ -1,4 +1,4 @@
-module github.com/rd-robin-senftleben/nop-scanner-messaging
+module github.com/rd-robin-senftleben/scanner-messaging
 
 go 1.19
 
