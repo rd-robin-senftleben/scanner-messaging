@@ -1,4 +1,4 @@
-package message
+package scanner
 
 const (
 	ASSET_MESSAGE_TYPE_ENUMERATION = "enumeration"

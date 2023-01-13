@@ -1,4 +1,4 @@
-package message
+package scanner
 
 import (
 	"encoding/json"
@@ -10,10 +10,10 @@ type KafkaConsumer struct {
 	consumer *kafka.Consumer
 }
 
-func NewConsumer(topics []string) KafkaConsumer {
+func NewConsumer(topics []string, groupId string) KafkaConsumer {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
-		"group.id":          "myGroup",
+		"group.id":          groupId,
 		"auto.offset.reset": "earliest",
 	})
 
