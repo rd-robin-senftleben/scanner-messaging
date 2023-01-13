@@ -1,4 +1,4 @@
-module github.com/rewe-digital-platform/nop-scanner-messaging
+module github.com/rd-robin-senftleben/nop-scanner-messaging
 
 go 1.19
 
