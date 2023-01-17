@@ -15,3 +15,10 @@ type AssetMessage struct {
 	Type string
 	Host string
 }
+type AssetMessageHttpConnect struct {
+	AssetMessage
+	Ports []int16
+}
+type AssetMessagePortscanDone struct {
+	AssetMessageHttpConnect
+}
