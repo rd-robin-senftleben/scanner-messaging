@@ -12,13 +12,7 @@ const (
 )
 
 type AssetMessage struct {
-	Type string
-	Host string
-}
-type AssetMessageHttpConnect struct {
-	AssetMessage
+	Type  string
+	Host  string
 	Ports []int16
-}
-type AssetMessagePortscanDone struct {
-	AssetMessageHttpConnect
 }
