@@ -14,5 +14,5 @@ const (
 type AssetMessage struct {
 	Type  string
 	Host  string
-	Ports []int16
+	Ports []int
 }
