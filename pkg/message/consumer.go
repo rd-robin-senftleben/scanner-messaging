@@ -7,7 +7,7 @@ import (
 )
 
 type KafkaConsumer struct {
-	consumer *kafka.Consumer
+	Consumer *kafka.Consumer
 }
 
 func NewConsumer(topics []string, groupId string) KafkaConsumer {
@@ -24,12 +24,12 @@ func NewConsumer(topics []string, groupId string) KafkaConsumer {
 	c.SubscribeTopics(topics, nil)
 
 	return KafkaConsumer{
-		consumer: c,
+		Consumer: c,
 	}
 }
 
 func (kc KafkaConsumer) Read() *AssetMessage {
-	msg, err := kc.consumer.ReadMessage(time.Second)
+	msg, err := kc.Consumer.ReadMessage(time.Second)
 
 	if err == nil {
 		assetMessage := &AssetMessage{}
