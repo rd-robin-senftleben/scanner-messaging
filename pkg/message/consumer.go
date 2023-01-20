@@ -2,8 +2,9 @@ package message
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"time"
+	"os"
 )
 
 type KafkaConsumer struct {
@@ -29,14 +30,33 @@ func NewConsumer(topics []string, groupId string) KafkaConsumer {
 }
 
 func (kc KafkaConsumer) Read() *AssetMessage {
-	msg, err := kc.Consumer.ReadMessage(time.Second)
+	ev := kc.Consumer.Poll(200)
 
-	if err == nil {
-		assetMessage := &AssetMessage{}
-		err := json.Unmarshal(msg.Value, assetMessage)
-		if err == nil {
-			return assetMessage
+	if ev == nil {
+		return nil
+	}
+
+	switch e := ev.(type) {
+	case *kafka.Message:
+		fmt.Printf("%% Message on %s:\n%s\n",
+			e.TopicPartition, string(e.Value))
+		if e.Headers != nil {
+			fmt.Printf("%% Headers: %v\n", e.Headers)
 		}
+		assetMessage := &AssetMessage{}
+		err := json.Unmarshal(e.Value, assetMessage)
+		if err != nil {
+			return nil
+		}
+
+		return assetMessage
+	case kafka.Error:
+		fmt.Fprintf(os.Stderr, "%% Error: %v: %v\n", e.Code(), e)
+		if e.Code() == kafka.ErrAllBrokersDown {
+			return nil
+		}
+	default:
+		fmt.Printf("Ignored %v\n", e)
 	}
 
 	return nil
