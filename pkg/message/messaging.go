@@ -1,7 +1,7 @@
 package message
 
 import (
-	"github.com/rd-robin-senftleben/scanner-messaging/pkg/message/kafka"
+	"github.com/rd-robin-senftleben/scanner-messaging/pkg/message/kafkabackend"
 	"github.com/rd-robin-senftleben/scanner-messaging/pkg/message/types"
 )
 
@@ -19,8 +19,8 @@ type Messaging struct {
 }
 
 func NewMessaging(groupId string) Messaging {
-	consumer := kafka.NewConsumer(types.ALL_TOPICS(), groupId)
-	producer := kafka.NewProducer()
+	consumer := kafkabackend.NewConsumer(types.ALL_TOPICS(), groupId)
+	producer := kafkabackend.NewProducer()
 
 	return Messaging{
 		Consumer: consumer,

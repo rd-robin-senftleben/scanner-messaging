@@ -1,4 +1,4 @@
-package kafka
+package kafkabackend
 
 import (
 	"encoding/json"
