@@ -2,6 +2,7 @@ package message
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"os"
@@ -29,7 +30,7 @@ func NewConsumer(topics []string, groupId string) KafkaConsumer {
 	}
 }
 
-func (kc KafkaConsumer) Read() *AssetMessage {
+func (kc KafkaConsumer) Read(v any) error {
 	ev := kc.Consumer.Poll(200)
 
 	if ev == nil {
@@ -43,17 +44,15 @@ func (kc KafkaConsumer) Read() *AssetMessage {
 		if e.Headers != nil {
 			fmt.Printf("%% Headers: %v\n", e.Headers)
 		}
-		assetMessage := &AssetMessage{}
-		err := json.Unmarshal(e.Value, assetMessage)
-		if err != nil {
-			return nil
-		}
 
-		return assetMessage
+		err := json.Unmarshal(e.Value, v)
+		if err != nil {
+			return err
+		}
 	case kafka.Error:
 		fmt.Fprintf(os.Stderr, "%% Error: %v: %v\n", e.Code(), e)
 		if e.Code() == kafka.ErrAllBrokersDown {
-			return nil
+			return errors.New(e.String())
 		}
 	default:
 		fmt.Printf("Ignored %v\n", e)

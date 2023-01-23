@@ -35,8 +35,8 @@ func NewProducer() KafkaProducer {
 	}
 }
 
-func (kc KafkaProducer) Write(assetMessage AssetMessage, topic string) {
-	out, _ := json.Marshal(assetMessage)
+func (kc KafkaProducer) Write(requestResponse RequestResponse, topic string) {
+	out, _ := json.Marshal(requestResponse)
 
 	kc.producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
