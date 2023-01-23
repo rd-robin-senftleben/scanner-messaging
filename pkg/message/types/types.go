@@ -1,4 +1,4 @@
-package message
+package types
 
 const (
 	TOPIC_ENUMERATIONS  = "enumeration"
