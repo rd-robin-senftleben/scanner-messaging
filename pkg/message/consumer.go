@@ -30,11 +30,11 @@ func NewConsumer(topics []string, groupId string) KafkaConsumer {
 	}
 }
 
-func (kc KafkaConsumer) Read(v any) error {
+func (kc KafkaConsumer) Read(v any) ([]byte, error) {
 	ev := kc.Consumer.Poll(200)
 
 	if ev == nil {
-		return nil
+		return nil, errors.New("no data received")
 	}
 
 	switch e := ev.(type) {
@@ -47,16 +47,18 @@ func (kc KafkaConsumer) Read(v any) error {
 
 		err := json.Unmarshal(e.Value, v)
 		if err != nil {
-			return err
+			return nil, err
 		}
+
+		return e.Value, nil
 	case kafka.Error:
 		fmt.Fprintf(os.Stderr, "%% Error: %v: %v\n", e.Code(), e)
 		if e.Code() == kafka.ErrAllBrokersDown {
-			return errors.New(e.String())
+			return nil, errors.New(e.String())
 		}
 	default:
 		fmt.Printf("Ignored %v\n", e)
 	}
 
-	return nil
+	return nil, nil
 }
