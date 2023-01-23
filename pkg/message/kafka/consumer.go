@@ -1,4 +1,4 @@
-package message
+package kafka
 
 import (
 	"encoding/json"
@@ -8,30 +8,12 @@ import (
 	"os"
 )
 
-type KafkaConsumer struct {
-	Consumer *kafka.Consumer
+type Consumer struct {
+	backend *kafka.Consumer
 }
 
-func NewConsumer(topics []string, groupId string) KafkaConsumer {
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
-		"group.id":          groupId,
-		"auto.offset.reset": "earliest",
-	})
-
-	if err != nil {
-		panic(err)
-	}
-
-	c.SubscribeTopics(topics, nil)
-
-	return KafkaConsumer{
-		Consumer: c,
-	}
-}
-
-func (kc KafkaConsumer) Read(v any) ([]byte, error) {
-	ev := kc.Consumer.Poll(200)
+func (kc Consumer) Read(v any) ([]byte, error) {
+	ev := kc.backend.Poll(200)
 
 	if ev == nil {
 		return nil, errors.New("no data received")
@@ -61,4 +43,22 @@ func (kc KafkaConsumer) Read(v any) ([]byte, error) {
 	}
 
 	return nil, nil
+}
+
+func NewConsumer(topics []string, groupId string) Consumer {
+	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+		"bootstrap.servers": "localhost:9092",
+		"group.id":          groupId,
+		"auto.offset.reset": "earliest",
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	c.SubscribeTopics(topics, nil)
+
+	return Consumer{
+		backend: c,
+	}
 }

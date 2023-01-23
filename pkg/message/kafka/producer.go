@@ -1,16 +1,17 @@
-package message
+package kafka
 
 import (
 	"encoding/json"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/rd-robin-senftleben/scanner-messaging/pkg/message"
 )
 
-type KafkaProducer struct {
-	producer *kafka.Producer
+type Producer struct {
+	backend *kafka.Producer
 }
 
-func NewProducer() KafkaProducer {
+func NewProducer() Producer {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
 		panic(err)
@@ -30,19 +31,19 @@ func NewProducer() KafkaProducer {
 		}
 	}()
 
-	return KafkaProducer{
-		producer: p,
+	return Producer{
+		backend: p,
 	}
 }
 
-func (kc KafkaProducer) Write(requestResponse RequestResponse, topic string) {
-	out, _ := json.Marshal(requestResponse)
+func (kc Producer) Write(v message.RequestResponse, topic string) {
+	out, _ := json.Marshal(v)
 
-	kc.producer.Produce(&kafka.Message{
+	kc.backend.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          out,
 	}, nil)
 
 	// Wait for message deliveries before shutting down
-	kc.producer.Flush(15 * 1000)
+	kc.backend.Flush(15 * 1000)
 }

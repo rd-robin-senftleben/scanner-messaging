@@ -6,6 +6,10 @@ const (
 	TOPIC_VULNERABILITY = "vulnerability"
 )
 
+func ALL_TOPICS() []string {
+	return []string{TOPIC_ENUMERATIONS, TOPIC_VULNERABILITY, TOPIC_PORT}
+}
+
 const (
 	TYPE_ENUMERATION      = "enumeration"
 	TYPE_ENUMERATION_DONE = "enumeration-done"
@@ -18,37 +22,32 @@ const (
 )
 
 type RequestResponse struct {
-	Type string
-	Host string
+	Type    string
+	Host    string
+	Payload map[string]any
 }
 
-type EnumerationRequest struct {
-	RequestResponse
-}
-type EnumerationResponse struct {
+type EnumerationRequestResponse struct {
 	RequestResponse
 }
 
-type PermutationRequest struct {
-	RequestResponse
-}
-type PermutationResponse struct {
+type PermutationRequestResponse struct {
 	RequestResponse
 }
 
-type PortscanRequest struct {
-	RequestResponse
-}
-type PortscanResponse struct {
+type PortscanRequestResponse struct {
 	RequestResponse
 	Ports []int
 }
 
-type HttpscanRequest struct {
-	RequestResponse
-}
-type HttpscanResponse struct {
+type HttpconnectRequestResponse struct {
 	RequestResponse
 	Url  string
 	Port int
+}
+
+type VulnerabilityRequestResponse struct {
+	RequestResponse
+	Url       string
+	Templates []string
 }
