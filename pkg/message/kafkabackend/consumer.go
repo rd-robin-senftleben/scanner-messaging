@@ -45,9 +45,9 @@ func (kc KafkaConsumer) Read(v any) ([]byte, error) {
 	return nil, nil
 }
 
-func NewConsumer(topics []string, groupId string) KafkaConsumer {
+func NewConsumer(topics []string, groupId string, bootstrapServer string) KafkaConsumer {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
+		"bootstrap.servers": bootstrapServer,
 		"group.id":          groupId,
 		"auto.offset.reset": "earliest",
 	})

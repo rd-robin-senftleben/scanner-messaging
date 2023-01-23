@@ -11,8 +11,8 @@ type KafkaProducer struct {
 	backend *kafka.Producer
 }
 
-func NewProducer() KafkaProducer {
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
+func NewProducer(bootstrapServer string) KafkaProducer {
+	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServer})
 	if err != nil {
 		panic(err)
 	}

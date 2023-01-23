@@ -18,9 +18,9 @@ type Messaging struct {
 	Producer Producer
 }
 
-func NewMessaging(groupId string) Messaging {
-	consumer := kafkabackend.NewConsumer(types.ALL_TOPICS(), groupId)
-	producer := kafkabackend.NewProducer()
+func NewMessaging(groupId string, bootstrapServer string) Messaging {
+	consumer := kafkabackend.NewConsumer(types.ALL_TOPICS(), groupId, bootstrapServer)
+	producer := kafkabackend.NewProducer(bootstrapServer)
 
 	return Messaging{
 		Consumer: consumer,
