@@ -8,11 +8,11 @@ import (
 	"os"
 )
 
-type Consumer struct {
+type KafkaConsumer struct {
 	backend *kafka.Consumer
 }
 
-func (kc Consumer) Read(v any) ([]byte, error) {
+func (kc KafkaConsumer) Read(v any) ([]byte, error) {
 	ev := kc.backend.Poll(200)
 
 	if ev == nil {
@@ -45,7 +45,7 @@ func (kc Consumer) Read(v any) ([]byte, error) {
 	return nil, nil
 }
 
-func NewConsumer(topics []string, groupId string) Consumer {
+func NewConsumer(topics []string, groupId string) KafkaConsumer {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
 		"group.id":          groupId,
@@ -58,7 +58,7 @@ func NewConsumer(topics []string, groupId string) Consumer {
 
 	c.SubscribeTopics(topics, nil)
 
-	return Consumer{
+	return KafkaConsumer{
 		backend: c,
 	}
 }

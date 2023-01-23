@@ -7,11 +7,11 @@ import (
 	"github.com/rd-robin-senftleben/scanner-messaging/pkg/message"
 )
 
-type Producer struct {
+type KafkaProducer struct {
 	backend *kafka.Producer
 }
 
-func NewProducer() Producer {
+func NewProducer() KafkaProducer {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
 		panic(err)
@@ -31,12 +31,12 @@ func NewProducer() Producer {
 		}
 	}()
 
-	return Producer{
+	return KafkaProducer{
 		backend: p,
 	}
 }
 
-func (kc Producer) Write(v message.RequestResponse, topic string) {
+func (kc KafkaProducer) Write(v message.RequestResponse, topic string) {
 	out, _ := json.Marshal(v)
 
 	kc.backend.Produce(&kafka.Message{
