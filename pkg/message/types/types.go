@@ -41,9 +41,7 @@ type PortscanRequestResponse struct {
 }
 
 type HttpconnectRequestResponse struct {
-	RequestResponse
-	Url  string
-	Port int
+	PortscanRequestResponse
 }
 
 type VulnerabilityRequestResponse struct {
