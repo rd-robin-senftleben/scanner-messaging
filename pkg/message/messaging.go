@@ -10,7 +10,7 @@ type Consumer interface {
 }
 
 type Producer interface {
-	Write(v types.RequestResponse, topic string)
+	Write(v any, topic string)
 }
 
 type Messaging struct {

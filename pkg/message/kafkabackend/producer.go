@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/rd-robin-senftleben/scanner-messaging/pkg/message/types"
 )
 
 type KafkaProducer struct {
@@ -36,7 +35,7 @@ func NewProducer(bootstrapServer string) KafkaProducer {
 	}
 }
 
-func (kc KafkaProducer) Write(v types.RequestResponse, topic string) {
+func (kc KafkaProducer) Write(v any, topic string) {
 	out, _ := json.Marshal(v)
 
 	kc.backend.Produce(&kafka.Message{
